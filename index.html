@@ -3,136 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amazon Clone | Online Shopping</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>NextGen Store - Smart Shopping Experience</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <!-- Main Header -->
+
+    <!-- TOP NAVBAR -->
     <header class="navbar">
-        <div class="nav-logo border-box">
-            <div class="logo"></div>
+        <div class="nav-logo">
+            <h2>NextGen<span>.shop</span></h2>
         </div>
 
-        <div class="nav-address border-box">
-            <p class="deliver-text">Deliver to</p>
-            <div class="add-icon">
-                <i class="fa-solid fa-location-dot"></i>
-                <p class="location-text">India</p>
-            </div>
+        <div class="nav-location" id="delivery-location-btn">
+            <span class="nav-line-1">Delivering to Pincode 110001</span>
+            <span class="nav-line-2">📍 Update Location</span>
         </div>
 
         <div class="nav-search">
-            <select class="search-select">
-                <option value="all">All Departments</option>
-                <option value="electronics">Electronics</option>
-                <option value="fashion">Fashion</option>
-                <option value="home">Home & Kitchen</option>
+            <select id="category-filter">
+                <option value="All">All Categories</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Furniture">Furniture</option>
+                <option value="Home & Kitchen">Home & Kitchen</option>
             </select>
-            <input type="text" class="search-input" placeholder="Search Amazon">
-            <div class="search-icon-btn">
-                <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="search-input" placeholder="Search products, brands and more...">
+            <button id="search-btn">🔍</button>
+        </div>
+
+        <div class="nav-actions">
+            <select id="sort-filter">
+                <option value="default">Sort By: Featured</option>
+                <option value="low-high">Price: Low to High</option>
+                <option value="high-low">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+            </select>
+
+            <div class="nav-cart" id="cart-btn">
+                🛒 Cart <span id="cart-count">0</span>
             </div>
-        </div>
-
-        <div class="nav-signin border-box">
-            <p><span>Hello, sign in</span></p>
-            <p class="nav-second">Account & Lists</p>
-        </div>
-
-        <div class="nav-returns border-box">
-            <p><span>Returns</span></p>
-            <p class="nav-second">& Orders</p>
-        </div>
-
-        <div class="nav-cart border-box" id="cart-btn">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <span id="cart-count">0</span>
-            <p class="cart-text">Cart</p>
+            
+            <div class="nav-wishlist">
+                ❤️ Wishlist <span id="wish-count">0</span>
+            </div>
         </div>
     </header>
 
-    <!-- Sub Navigation Bar -->
-    <nav class="panel">
-        <div class="panel-all border-box">
-            <i class="fa-solid fa-bars"></i>
-            All
+    <!-- NEW FEATURE 1: LIGHTNING DEALS BANNER WITH LIVE TIMER -->
+    <section class="deal-banner">
+        <div class="deal-info">
+            <span class="badge">FLASH SALE</span>
+            <h2>⚡ Today's Lightning Deals</h2>
+            <p>Up to 50% OFF on Top Tech & Accessories</p>
         </div>
-        <div class="panel-ops">
-            <a href="#">Today's Deals</a>
-            <a href="#">Customer Service</a>
-            <a href="#">Registry</a>
-            <a href="#">Gift Cards</a>
-            <a href="#">Sell</a>
-        </div>
-        <div class="panel-deals">
-            Shop Great Deals now
-        </div>
-    </nav>
-
-    <!-- Hero Banner -->
-    <section class="hero-section">
-        <div class="hero-message">
-            <p>You are on amazon.com. You can also shop on Amazon India for millions of products with fast local delivery. <a href="#">Click here to go to amazon.in</a></p>
+        <div class="deal-timer">
+            Ends in: <span id="timer-display">04h 29m 55s</span>
         </div>
     </section>
 
-    <!-- Product Grid -->
-    <main class="shop-section" id="product-grid">
-        <!-- Injected dynamically via JS or rendered static -->
+    <!-- NEW FEATURE 2: SMART AI RECOMMENDATION WIDGET -->
+    <section class="ai-widget">
+        <div class="ai-box">
+            <h3>🤖 AI Budget Finder</h3>
+            <p>Enter your budget and let AI suggest the best product for you!</p>
+            <div class="ai-controls">
+                <input type="number" id="ai-budget-input" placeholder="Enter Max Price ($)" min="10">
+                <button id="ai-find-btn">Find Best Item</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN PRODUCT GRID -->
+    <main class="container">
+        <div class="grid-header">
+            <h3>Explore Products</h3>
+            <button id="reset-filters-btn" class="secondary-btn">Reset All Filters</button>
+        </div>
+        <div id="products-container" class="product-grid">
+            <!-- Dynamic Products Inserted via JS -->
+        </div>
     </main>
 
-    <!-- Footer Section -->
-    <footer>
-        <div class="foot-panel1" id="back-to-top">
-            Back to top
+    <!-- NEW FEATURE 3: LIVE ORDER TRACKING BAR (HIDDEN BY DEFAULT) -->
+    <section id="order-tracker-bar" class="tracker-card" style="display: none;">
+        <h3>📦 Active Order Status</h3>
+        <p>Estimated Delivery: <strong id="track-date">Mon, Sep 28</strong></p>
+        <div class="tracker-steps">
+            <div class="step completed">✓ Placed</div>
+            <div class="step active">🚚 In Transit</div>
+            <div class="step">🏠 Out for Delivery</div>
         </div>
+    </section>
 
-        <div class="foot-panel2">
-            <ul>
-                <p>Get to Know Us</p>
-                <a href="#">Careers</a>
-                <a href="#">Blog</a>
-                <a href="#">About Amazon</a>
-                <a href="#">Investor Relations</a>
-            </ul>
-            <ul>
-                <p>Make Money with Us</p>
-                <a href="#">Sell products on Amazon</a>
-                <a href="#">Sell on Amazon Business</a>
-                <a href="#">Become an Affiliate</a>
-                <a href="#">Advertise Your Products</a>
-            </ul>
-            <ul>
-                <p>Amazon Payment Products</p>
-                <a href="#">Amazon Business Card</a>
-                <a href="#">Shop with Points</a>
-                <a href="#">Reload Your Balance</a>
-            </ul>
-            <ul>
-                <p>Let Us Help You</p>
-                <a href="#">Amazon and COVID-19</a>
-                <a href="#">Your Account</a>
-                <a href="#">Your Orders</a>
-                <a href="#">Shipping Rates & Policies</a>
-            </ul>
+    <!-- CART SIDEBAR -->
+    <div id="cart-sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3>Your Shopping Cart</h3>
+            <button id="close-cart-btn">&times;</button>
         </div>
-
-        <div class="foot-panel3">
-            <div class="logo"></div>
-        </div>
-
-        <div class="foot-panel4">
-            <div class="pages">
-                <a href="#">Conditions of Use</a>
-                <a href="#">Privacy Notice</a>
-                <a href="#">Your Ads Privacy Choices</a>
+        <div id="cart-items" class="cart-body"></div>
+        <div class="sidebar-footer">
+            <div class="promo-box">
+                <input type="text" id="coupon-code" placeholder="Enter Code (e.g. HACK20)">
+                <button id="apply-coupon-btn">Apply</button>
             </div>
-            <div class="copyright">
-                © 1996-2026, Amazon.com, Inc. or its affiliates
+            <p id="discount-text" style="display:none; color:green; font-size:12px;">🎉 Discount Applied!</p>
+            <h4>Total: $<span id="cart-total">0.00</span></h4>
+            <button id="checkout-btn" class="primary-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- QUICK VIEW PRODUCT MODAL -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal-btn" class="close">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-checkout-btn" class="close">&times;</span>
+            <h3>Final Checkout</h3>
+            <p>Grand Total: <strong id="checkout-total-price">$0.00</strong></p>
+            <form id="checkout-form">
+                <input type="text" id="cust-name" placeholder="Full Name" required>
+                <textarea id="cust-address" placeholder="Delivery Address" required></textarea>
+                <input type="text" id="cust-pin" placeholder="Pincode" required maxlength="6">
+                <select id="cust-payment">
+                    <option value="COD">Cash on Delivery</option>
+                    <option value="CARD">Credit/Debit Card</option>
+                    <option value="UPI">UPI / Instant Pay</option>
+                </select>
+                <button type="submit" class="primary-btn">Confirm Order</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CUSTOM PINCODE MODAL (Replaces Browser Prompt) -->
+    <div id="pincode-modal" class="modal" style="display:none;">
+        <div class="modal-content pincode-box">
+            <h3>Enter Delivery Pincode</h3>
+            <p>Check product availability and delivery speed</p>
+            <input type="text" id="pincode-input" placeholder="e.g. 110001" maxlength="6">
+            <div class="modal-actions">
+                <button id="cancel-pincode-btn" class="secondary-btn">Cancel</button>
+                <button id="apply-pincode-btn" class="primary-btn">Update</button>
             </div>
         </div>
-    </footer>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast">Notification Message</div>
 
     <script src="script.js"></script>
 </body>
