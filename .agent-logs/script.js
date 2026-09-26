@@ -3,7 +3,7 @@ function runAiQuery() {
   const res = document.getElementById('aiResult');
   
   if (!q) {
-    res.innerText = "Kripya search karne ke liye kuch text enter karein.";
+    res.innerText = "AI Query Results: Please enter a query to analyze the databse.";
     res.classList.remove('hidden');
     return;
   }
@@ -13,7 +13,7 @@ function runAiQuery() {
 
   // Check if productsData has items
   if (!productsData || productsData.length === 0) {
-    res.innerText = "AI Analysis: Database me abhi koi items nahi hain. Pehle ek item create karein!";
+    res.innerText = "AI Query Results: Database is empty. No products to analyze.";
     return;
   }
 
@@ -31,6 +31,6 @@ function runAiQuery() {
     const titles = match.map(m => m.title).join(', ');
     res.innerText = `AI Query Results: Matched ${match.length} item(s) in database: ${titles}`;
   } else {
-    res.innerText = `AI Query Results: Database me "${q}" se matching koi record nahi mila.`;
+    res.innerText = `AI Query Results: No items found in databse matching the query "${q}".`;
   }
 }
